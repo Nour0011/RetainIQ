@@ -1,0 +1,7 @@
+Metric,Value
+total_rows,7032
+total_columns,21
+duplicate_rows,0
+missing_values_total,0
+target_column,Churn
+churn_rate_percent,26.58

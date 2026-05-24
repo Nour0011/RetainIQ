@@ -1,0 +1,62 @@
+{
+    "window_id": 1,
+    "production_data_path": "C:\\Users\\ASUS\\Downloads\\RetainIQ\\data\\production_simulation\\production_window_1.csv",
+    "alert": {
+        "alert_level": "MEDIUM",
+        "recommended_action": "Monitor closely. Some features show distribution shift.",
+        "critical_features": [],
+        "significant_features": [
+            "MonthlyCharges"
+        ]
+    },
+    "performance_metrics": {
+        "accuracy": 0.7975,
+        "recall": 0.8144,
+        "f1_score": 0.677,
+        "roc_auc": 0.8823,
+        "average_churn_probability": 0.3845,
+        "predicted_churn_rate": 0.3663
+    },
+    "feature_drift": {
+        "SeniorCitizen": {
+            "psi_score": 0.0002,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.0048,
+            "ks_p_value": 1.0,
+            "distribution_shifted": false,
+            "reference_mean": 0.1624,
+            "production_mean": 0.1672,
+            "mean_shift_percent": 2.98
+        },
+        "tenure": {
+            "psi_score": 0.0212,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.0926,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 32.4218,
+            "production_mean": 29.934,
+            "mean_shift_percent": 7.67
+        },
+        "MonthlyCharges": {
+            "psi_score": 0.2112,
+            "psi_severity": "Significant",
+            "ks_statistic": 0.1463,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 64.7982,
+            "production_mean": 70.3926,
+            "mean_shift_percent": 8.63
+        },
+        "TotalCharges": {
+            "psi_score": 0.0201,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.0297,
+            "ks_p_value": 0.1646,
+            "distribution_shifted": false,
+            "reference_mean": 2283.3004,
+            "production_mean": 2427.641,
+            "mean_shift_percent": 6.32
+        }
+    }
+}

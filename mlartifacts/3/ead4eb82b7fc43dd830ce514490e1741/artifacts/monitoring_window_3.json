@@ -1,0 +1,66 @@
+{
+    "window_id": 3,
+    "production_data_path": "C:\\Users\\ASUS\\Downloads\\RetainIQ\\data\\production_simulation\\production_window_3.csv",
+    "alert": {
+        "alert_level": "CRITICAL",
+        "recommended_action": "Immediate model retraining required. Production performance or data distribution changed strongly.",
+        "critical_features": [
+            "tenure",
+            "MonthlyCharges"
+        ],
+        "significant_features": [
+            "tenure",
+            "MonthlyCharges"
+        ]
+    },
+    "performance_metrics": {
+        "accuracy": 0.7802,
+        "recall": 0.8364,
+        "f1_score": 0.6671,
+        "roc_auc": 0.8737,
+        "average_churn_probability": 0.4386,
+        "predicted_churn_rate": 0.397
+    },
+    "feature_drift": {
+        "SeniorCitizen": {
+            "psi_score": 0.0823,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.118,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 0.1624,
+            "production_mean": 0.2804,
+            "mean_shift_percent": 72.64
+        },
+        "tenure": {
+            "psi_score": 1.2742,
+            "psi_severity": "Critical",
+            "ks_statistic": 0.1895,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 32.4218,
+            "production_mean": 25.1166,
+            "mean_shift_percent": 22.53
+        },
+        "MonthlyCharges": {
+            "psi_score": 1.3474,
+            "psi_severity": "Critical",
+            "ks_statistic": 0.2508,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 64.7982,
+            "production_mean": 80.139,
+            "mean_shift_percent": 23.67
+        },
+        "TotalCharges": {
+            "psi_score": 0.1003,
+            "psi_severity": "Monitor",
+            "ks_statistic": 0.0479,
+            "ks_p_value": 0.0005,
+            "distribution_shifted": true,
+            "reference_mean": 2283.3004,
+            "production_mean": 2599.5581,
+            "mean_shift_percent": 13.85
+        }
+    }
+}

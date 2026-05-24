@@ -1,0 +1,64 @@
+{
+    "window_id": 2,
+    "production_data_path": "C:\\Users\\ASUS\\Downloads\\RetainIQ\\data\\production_simulation\\production_window_2.csv",
+    "alert": {
+        "alert_level": "MEDIUM",
+        "recommended_action": "Monitor closely. Some features show distribution shift.",
+        "critical_features": [
+            "MonthlyCharges"
+        ],
+        "significant_features": [
+            "MonthlyCharges"
+        ]
+    },
+    "performance_metrics": {
+        "accuracy": 0.8033,
+        "recall": 0.8365,
+        "f1_score": 0.682,
+        "roc_auc": 0.8849,
+        "average_churn_probability": 0.4061,
+        "predicted_churn_rate": 0.3664
+    },
+    "feature_drift": {
+        "SeniorCitizen": {
+            "psi_score": 0.0007,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.0098,
+            "ks_p_value": 0.9972,
+            "distribution_shifted": false,
+            "reference_mean": 0.1624,
+            "production_mean": 0.1526,
+            "mean_shift_percent": 6.03
+        },
+        "tenure": {
+            "psi_score": 0.1035,
+            "psi_severity": "Monitor",
+            "ks_statistic": 0.1342,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 32.4218,
+            "production_mean": 28.264,
+            "mean_shift_percent": 12.82
+        },
+        "MonthlyCharges": {
+            "psi_score": 0.614,
+            "psi_severity": "Critical",
+            "ks_statistic": 0.1941,
+            "ks_p_value": 0.0,
+            "distribution_shifted": true,
+            "reference_mean": 64.7982,
+            "production_mean": 75.4989,
+            "mean_shift_percent": 16.51
+        },
+        "TotalCharges": {
+            "psi_score": 0.064,
+            "psi_severity": "Stable",
+            "ks_statistic": 0.0482,
+            "ks_p_value": 0.001,
+            "distribution_shifted": true,
+            "reference_mean": 2283.3004,
+            "production_mean": 2597.3411,
+            "mean_shift_percent": 13.75
+        }
+    }
+}

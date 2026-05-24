@@ -1,0 +1,56 @@
+[
+    {
+        "timestamp": "2026-05-16 20:37:43.240678",
+        "prediction": 1,
+        "probability": 0.9072827554536936,
+        "risk_level": "High",
+        "customer_data": {
+            "gender": "Female",
+            "SeniorCitizen": 0,
+            "Partner": "Yes",
+            "Dependents": "No",
+            "tenure": 5,
+            "PhoneService": "Yes",
+            "MultipleLines": "No",
+            "InternetService": "Fiber optic",
+            "OnlineSecurity": "No",
+            "OnlineBackup": "No",
+            "DeviceProtection": "No",
+            "TechSupport": "No",
+            "StreamingTV": "Yes",
+            "StreamingMovies": "Yes",
+            "Contract": "Month-to-month",
+            "PaperlessBilling": "Yes",
+            "PaymentMethod": "Electronic check",
+            "MonthlyCharges": 95.5,
+            "TotalCharges": 477.5
+        }
+    },
+    {
+        "timestamp": "2026-05-16 20:37:45.082078",
+        "prediction": 1,
+        "probability": 0.9072827554536936,
+        "risk_level": "High",
+        "customer_data": {
+            "gender": "Female",
+            "SeniorCitizen": 0,
+            "Partner": "Yes",
+            "Dependents": "No",
+            "tenure": 5,
+            "PhoneService": "Yes",
+            "MultipleLines": "No",
+            "InternetService": "Fiber optic",
+            "OnlineSecurity": "No",
+            "OnlineBackup": "No",
+            "DeviceProtection": "No",
+            "TechSupport": "No",
+            "StreamingTV": "Yes",
+            "StreamingMovies": "Yes",
+            "Contract": "Month-to-month",
+            "PaperlessBilling": "Yes",
+            "PaymentMethod": "Electronic check",
+            "MonthlyCharges": 95.5,
+            "TotalCharges": 477.5
+        }
+    }
+]

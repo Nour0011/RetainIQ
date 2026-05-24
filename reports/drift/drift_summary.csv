@@ -1,0 +1,4 @@
+feature,reference_mean,production_mean,drift_score,drift_detected
+tenure,32.4218,31.0647,0.0419,False
+MonthlyCharges,64.7982,69.6474,0.0748,False
+TotalCharges,2283.3004,2289.2891,0.0026,False

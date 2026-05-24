@@ -1,0 +1,36 @@
+{
+    "monitoring_summary": {
+        "average_numeric_drift": 8.3142,
+        "drift_level": "Medium Drift"
+    },
+    "production_metrics": {
+        "production_accuracy": 0.7815165876777251,
+        "production_recall": 0.8377896613190731,
+        "production_f1_score": 0.6709493219129193,
+        "production_roc_auc": 0.8808569498578233,
+        "average_churn_probability": 0.41354503947813576,
+        "predicted_churn_rate": 0.3981042654028436
+    },
+    "feature_drift": {
+        "SeniorCitizen": {
+            "reference_mean": 0.1624,
+            "production_mean": 0.1673,
+            "absolute_difference": 0.0049
+        },
+        "tenure": {
+            "reference_mean": 32.4218,
+            "production_mean": 28.0763,
+            "absolute_difference": 4.3455
+        },
+        "MonthlyCharges": {
+            "reference_mean": 64.7982,
+            "production_mean": 75.0452,
+            "absolute_difference": 10.247
+        },
+        "TotalCharges": {
+            "reference_mean": 2283.3004,
+            "production_mean": 2301.9598,
+            "absolute_difference": 18.6593
+        }
+    }
+}

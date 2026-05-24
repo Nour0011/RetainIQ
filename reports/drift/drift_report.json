@@ -1,0 +1,30 @@
+{
+    "method": "Relative mean difference",
+    "drift_threshold": 0.1,
+    "total_features_checked": 3,
+    "features_with_drift": 0,
+    "drift_detected": false,
+    "features": [
+        {
+            "feature": "tenure",
+            "reference_mean": 32.4218,
+            "production_mean": 31.0647,
+            "drift_score": 0.0419,
+            "drift_detected": false
+        },
+        {
+            "feature": "MonthlyCharges",
+            "reference_mean": 64.7982,
+            "production_mean": 69.6474,
+            "drift_score": 0.0748,
+            "drift_detected": false
+        },
+        {
+            "feature": "TotalCharges",
+            "reference_mean": 2283.3004,
+            "production_mean": 2289.2891,
+            "drift_score": 0.0026,
+            "drift_detected": false
+        }
+    ]
+}

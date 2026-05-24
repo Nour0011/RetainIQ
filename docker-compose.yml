@@ -1,0 +1,31 @@
+services:
+  retainiq-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: retainiq-api
+    ports:
+      - "8010:8010"
+    volumes:
+     - .:/app
+
+  retainiq-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: retainiq-frontend
+    ports:
+      - "5511:80"
+    depends_on:
+      - retainiq-api
+
+  retainiq-mlflow:
+    image: python:3.11-slim
+    container_name: retainiq-mlflow
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "pip install mlflow && mlflow ui --host 0.0.0.0 --port 5000"

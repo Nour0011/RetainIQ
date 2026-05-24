@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetainIQ Pro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="background-glow"></div>
+
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-circle">R</div>
+      <div>
+        <h1>RetainIQ</h1>
+        <p>AI Retention Platform</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <button class="menu-btn active nav-dashboard">Dashboard</button>
+      <button class="menu-btn nav-batch">Batch Analysis</button>
+      <button class="menu-btn nav-risk">Risk Intelligence</button>
+      <button class="menu-btn nav-simulator">What-If Simulator</button>
+      <button class="menu-btn nav-mlops">MLOps Monitoring</button>
+    </nav>
+
+    <div class="api-status">
+      <div class="status-dot"></div>
+      <div>
+        <h4>Production API</h4>
+        <p>MLflow Registered Model</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <section class="hero">
+      <div class="hero-left">
+        <span class="hero-tag">AI-POWERED CUSTOMER RETENTION</span>
+        <h2>Predict churn, explain risk, and simulate retention impact.</h2>
+        <p>RetainIQ Pro helps subscription businesses identify high-risk customers, understand why they may leave, and estimate the ROI of possible retention actions.</p>
+
+        <div class="hero-buttons">
+          <button class="primary-btn nav-batch">Analyze Customers</button>
+          <button class="secondary-btn nav-simulator">Run What-If Simulation</button>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="ai-circle">AI</div>
+
+        <div class="hero-mini-card">
+          <span>Platform Mode</span>
+          <h4>Decision Intelligence</h4>
+        </div>
+
+        <div class="hero-mini-card">
+          <span>Model Lifecycle</span>
+          <h4>Tracked by MLflow</h4>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3 id="customersAnalyzed">0</h3>
+        <p>Customers Analyzed</p>
+      </div>
+
+      <div class="stat-card danger">
+        <h3 id="highRisk">0</h3>
+        <p>High-Risk Customers</p>
+      </div>
+
+      <div class="stat-card warning">
+        <h3 id="mediumRisk">0</h3>
+        <p>Medium-Risk Customers</p>
+      </div>
+
+      <div class="stat-card success">
+        <h3 id="revenueRisk">$0</h3>
+        <p>Revenue at Risk</p>
+      </div>
+    </section>
+
+    <section class="top-grid upload-section">
+      <div class="glass-card">
+        <span class="section-tag">BATCH INTELLIGENCE</span>
+        <h3>Company Data Upload</h3>
+        <p class="section-text">Upload a CSV export of customer records and RetainIQ will score every customer with churn probability, explanation, and suggested retention action.</p>
+
+        <div class="upload-area">
+          <div class="upload-icon">CSV</div>
+          <input type="file" id="csvFile" />
+          <button id="analyzeBtn" class="primary-btn full-btn">Analyze Customer File</button>
+          <small>Demo file: sample_customers.csv</small>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <span class="section-tag">EXECUTIVE INSIGHT</span>
+        <h3>Business Summary</h3>
+        <div id="summaryText" class="summary-box">Upload a CSV file to generate business insights.</div>
+      </div>
+    </section>
+
+    <section class="glass-card table-card risk-section">
+      <span class="section-tag">EXPLAINABLE RISK INTELLIGENCE</span>
+      <h3>Top High-Risk Customers</h3>
+      <p class="section-text">Customers are ranked by churn probability. Explanations are based on model-tested what-if changes rather than only fixed text rules.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Risk</th>
+              <th>Probability</th>
+              <th>Model-Based Explanation</th>
+              <th>Recommended Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="customerTable">
+            <tr>
+              <td colspan="5">Upload customer data to reveal churn intelligence.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="glass-card simulator-card simulator-section">
+      <span class="section-tag">UNIQUE CONTRIBUTION</span>
+      <h3>What-If Retention Simulator</h3>
+      <p class="section-text">Simulate a retention intervention and estimate how much churn risk may drop, how much revenue may be protected, and whether the action is financially worth it.</p>
+
+      <div class="sim-grid">
+        <div>
+          <label>Intervention Cost</label>
+          <input type="number" id="interventionCost" value="100" />
+
+          <label>Annual Customer Value</label>
+          <input type="number" id="customerValue" value="1000" />
+
+          <button id="simulateBtn" class="primary-btn full-btn">Run Simulation on Demo Customer</button>
+        </div>
+
+        <div id="simulationResult" class="simulation-result">Run a simulation to see ROI analysis.</div>
+      </div>
+    </section>
+
+    <section class="bottom-grid mlops-section">
+      <div class="glass-card">
+        <span class="section-tag">MLOPS MONITORING</span>
+        <h3>Live API Metrics</h3>
+        <p class="section-text">Operational counters from the deployed prediction service.</p>
+
+        <div class="metrics">
+          <div class="metric-row">
+            <span>Total Predictions</span>
+            <strong id="metricPredictions">0</strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Last Batch Size</span>
+            <strong id="metricBatch">0</strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Last Prediction Time</span>
+            <strong id="metricTime">--</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <span class="section-tag">PRODUCT VALUE</span>
+        <h3>Why Companies Use RetainIQ</h3>
+
+        <ul class="feature-list">
+          <li>Identify customers likely to leave before revenue is lost.</li>
+          <li>Explain model behavior through what-if analysis.</li>
+          <li>Estimate revenue exposure and intervention ROI.</li>
+          <li>Serve predictions through production APIs.</li>
+          <li>Track model lifecycle with MLflow and Dockerized deployment.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
