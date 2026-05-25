@@ -1,4 +1,8 @@
 venv/
 __pycache__/
+*.pyc
+
 mlruns/
-*.pkl
+mlartifacts/
+
+.DS_Store
