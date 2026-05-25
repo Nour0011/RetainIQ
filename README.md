@@ -1,12 +1,12 @@
-# RetainIQ Pro
+# RetainIQ
 
-AI-Powered Customer Churn Intelligence Platform with MLflow, FastAPI, Docker, and Explainable AI.
+AI-Powered Customer Churn Intelligence Platform with MLflow, FastAPI, Docker, GitHub Actions, and Explainable AI.
 
 ---
 
 # Overview
 
-RetainIQ Pro is an end-to-end machine learning lifecycle management platform developed to demonstrate practical MLOps concepts using MLflow.
+RetainIQ is an end-to-end machine learning lifecycle management platform developed to demonstrate practical MLOps concepts using MLflow.
 
 The system predicts customer churn risk, explains why customers are likely to leave, and simulates retention strategies to estimate business impact.
 
@@ -25,8 +25,58 @@ The platform integrates:
 - Interactive business dashboard
 - What-if retention simulation
 - Dockerized deployment
+- CI/CD validation workflow
 
 The project demonstrates a complete production-style ML pipeline from model development to deployment and monitoring.
+
+---
+
+# Quick Start
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Nour0011/RetainIQ.git
+cd RetainIQ
+```
+
+---
+
+## Start the Platform
+
+```bash
+docker compose up --build
+```
+
+---
+
+## Open Services
+
+### Frontend Dashboard
+
+```text
+http://localhost:5511
+```
+
+### FastAPI Documentation
+
+```text
+http://localhost:8010/docs
+```
+
+### MLflow Tracking UI
+
+```text
+http://localhost:5000
+```
+
+After opening the dashboard, upload:
+
+```text
+sample_customers.csv
+```
+
+to test the complete RetainIQ workflow.
 
 ---
 
@@ -65,6 +115,7 @@ This project was developed to demonstrate the following machine learning lifecyc
 7. Explainable AI Workflows
 8. What-If Retention Simulations
 9. Dockerized Infrastructure
+10. CI/CD Validation Workflow
 
 ---
 
@@ -101,6 +152,7 @@ MLflow Tracking & Registry
 - Optuna
 - Docker
 - Docker Compose
+- GitHub Actions
 
 ## Backend
 
@@ -303,12 +355,9 @@ This allows businesses to understand actionable retention strategies rather than
 
 # What-If Retention Simulator
 
-The platform includes a business simulation engine that estimates:
+The platform includes a business simulation engine that estimates how recommended retention actions may reduce customer churn risk.
 
-- Risk reduction
-- Revenue protected
-- Intervention cost
-- ROI of retention actions
+The simulator reuses the trained Random Forest model by modifying selected customer attributes and recalculating churn probability.
 
 ## Example Simulation
 
@@ -316,8 +365,9 @@ The platform includes a business simulation engine that estimates:
 Current Risk: 92%
 After One-Year Contract: 57%
 Risk Reduction: 35%
-Estimated Revenue Protected: $354.55
 ```
+
+This demonstrates how retention actions may influence predicted churn probability before business decisions are made.
 
 ---
 
@@ -328,7 +378,8 @@ The dashboard provides:
 - CSV upload interface
 - Churn analysis summary
 - High-risk customer ranking
-- Simulation results
+- Explainable AI recommendations
+- What-if simulation results
 - Revenue exposure estimation
 - Live API metrics
 - Production monitoring view
@@ -380,6 +431,20 @@ docker compose up --build
 
 ---
 
+# CI/CD Validation Workflow
+
+GitHub Actions was used to implement a lightweight CI/CD validation pipeline.
+
+The workflow automatically:
+
+- Verifies Docker Compose builds
+- Validates container startup configuration
+- Ensures deployment reproducibility after GitHub pushes
+
+This demonstrates basic continuous integration practices within the RetainIQ platform.
+
+---
+
 # Project Structure
 
 ```text
@@ -424,33 +489,15 @@ RetainIQ/
 │   └── drift_monitoring.py
 │
 ├── reports/
-│   ├── drift/
-│   ├── recommendations/
-│   ├── explainability/
-│   ├── evaluation/
-│   ├── monitoring/
-│   ├── tuning/
-│   └── training_artifacts/
 │
 ├── docs/
 │   └── screenshots/
-│       ├── dashboard_overview.png
-│       ├── risk_analysis_dashboard.png
-│       ├── mlflow_home.png
-│       ├── mlflow_run_details.png
-│       ├── mlflow_model_registry.png
-│       ├── api_documentation.png
-│       ├── api_predict_endpoint.png
-│       ├── api_simulation_endpoint.png
-│       └── docker_containers_running.png
 │
 ├── mlruns/
 ├── notebooks/
-│   └── EDA_MLOPS.ipynb
 │
 ├── sample_customers.csv
 ├── docker-compose.yml
-├── Dockerfile
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
@@ -515,6 +562,74 @@ The final Random Forest model successfully demonstrated:
 
 ---
 
+# Using RetainIQ
+
+## Step 1 — Open Dashboard
+
+Visit:
+
+```text
+http://localhost:5511
+```
+
+---
+
+## Step 2 — Upload Customer CSV
+
+Upload a customer CSV file using the dashboard upload section.
+
+The repository already includes:
+
+```text
+sample_customers.csv
+```
+
+This is a sample company customer dataset that can be used directly to test the platform.
+
+---
+
+## Step 3 — Analyze Customers
+
+RetainIQ will:
+
+- Predict churn probability
+- Rank high-risk customers
+- Estimate revenue at risk
+- Generate explainable retention recommendations
+
+---
+
+## Step 4 — Run What-If Simulation
+
+The What-If Simulator:
+
+1. Selects the highest-risk customer
+2. Applies the AI-recommended retention action
+3. Runs the trained Random Forest model again
+4. Compares churn risk before and after intervention
+
+This demonstrates how retention actions may reduce customer churn probability.
+
+---
+
+## Step 5 — Monitor MLflow
+
+Visit:
+
+```text
+http://localhost:5000
+```
+
+MLflow displays:
+
+- Experiments
+- Metrics
+- Artifacts
+- Registered models
+- Hyperparameter tuning runs
+
+---
+
 # Future Improvements
 
 Potential future enhancements include:
@@ -526,13 +641,21 @@ Potential future enhancements include:
 - Advanced drift detection
 - LLM-generated customer insights
 - Kubernetes deployment
-- CI/CD integration
+- Advanced CI/CD automation
 
 ---
 
 # Lessons Learned
 
-This project demonstrated the importance of combining machine learning engineering with operational lifecycle management. Beyond model accuracy, production systems require deployment reliability, experiment traceability, explainability, monitoring, and reproducible infrastructure.
+This project demonstrated the importance of combining machine learning engineering with operational lifecycle management.
+
+Beyond model accuracy, production systems require:
+
+- Deployment reliability
+- Experiment traceability
+- Explainability
+- Monitoring
+- Reproducible infrastructure
 
 The project also highlighted how MLOps practices improve collaboration, reproducibility, and maintainability in real-world AI systems.
 
@@ -578,47 +701,6 @@ Recommended environment:
 ```bash
 docker --version
 docker compose version
-```
-
----
-
-# How to Run
-
-## 1. Clone Repository
-
-```bash
-git clone <your-repository-url>
-cd RetainIQ
-```
-
----
-
-## 2. Build and Run Containers
-
-```bash
-docker compose up --build
-```
-
----
-
-## 3. Open Services
-
-### Frontend Dashboard
-
-```text
-http://localhost:5511
-```
-
-### FastAPI Documentation
-
-```text
-http://localhost:8010/docs
-```
-
-### MLflow UI
-
-```text
-http://localhost:5000
 ```
 
 ---
@@ -675,6 +757,8 @@ The dashboard should display:
 - What-if simulation
 - Monitoring metrics
 
+---
+
 ## API
 
 ```text
@@ -682,6 +766,8 @@ http://localhost:8010/docs
 ```
 
 Swagger UI should display all endpoints.
+
+---
 
 ## MLflow
 
@@ -696,4 +782,3 @@ MLflow UI should display:
 - Metrics
 - Registered models
 - Artifacts
-

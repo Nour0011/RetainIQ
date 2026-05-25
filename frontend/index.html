@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RetainIQ Pro</title>
 
+  <title>RetainIQ</title>
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
 
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <div class="background-glow"></div>
 
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo-area">
       <div class="logo-circle">R</div>
@@ -41,12 +48,20 @@
     </div>
   </aside>
 
+  <!-- Main content -->
   <main class="main-content">
+
+    <!-- Hero -->
     <section class="hero">
       <div class="hero-left">
         <span class="hero-tag">AI-POWERED CUSTOMER RETENTION</span>
+
         <h2>Predict churn, explain risk, and simulate retention impact.</h2>
-        <p>RetainIQ Pro helps subscription businesses identify high-risk customers, understand why they may leave, and estimate the ROI of possible retention actions.</p>
+
+        <p>
+          RetainIQ helps businesses identify high-risk customers, understand why
+          they may leave, and test how retention actions could reduce churn risk.
+        </p>
 
         <div class="hero-buttons">
           <button class="primary-btn nav-batch">Analyze Customers</button>
@@ -69,6 +84,7 @@
       </div>
     </section>
 
+    <!-- KPI cards -->
     <section class="stats-grid">
       <div class="stat-card">
         <h3 id="customersAnalyzed">0</h3>
@@ -91,37 +107,59 @@
       </div>
     </section>
 
+    <!-- Upload + summary -->
     <section class="top-grid upload-section">
       <div class="glass-card">
         <span class="section-tag">BATCH INTELLIGENCE</span>
+
         <h3>Company Data Upload</h3>
-        <p class="section-text">Upload a CSV export of customer records and RetainIQ will score every customer with churn probability, explanation, and suggested retention action.</p>
+
+        <p class="section-text">
+          Upload a CSV file of customer records. RetainIQ will predict churn risk,
+          explain the risk, and recommend retention actions.
+        </p>
 
         <div class="upload-area">
           <div class="upload-icon">CSV</div>
+
           <input type="file" id="csvFile" />
-          <button id="analyzeBtn" class="primary-btn full-btn">Analyze Customer File</button>
+
+          <button id="analyzeBtn" class="primary-btn full-btn">
+            Analyze Customer File
+          </button>
+
           <small>Demo file: sample_customers.csv</small>
         </div>
       </div>
 
       <div class="glass-card">
         <span class="section-tag">EXECUTIVE INSIGHT</span>
+
         <h3>Business Summary</h3>
-        <div id="summaryText" class="summary-box">Upload a CSV file to generate business insights.</div>
+
+        <div id="summaryText" class="summary-box">
+          Upload a CSV file to generate business insights.
+        </div>
       </div>
     </section>
 
+    <!-- Risk table -->
     <section class="glass-card table-card risk-section">
       <span class="section-tag">EXPLAINABLE RISK INTELLIGENCE</span>
+
       <h3>Top High-Risk Customers</h3>
-      <p class="section-text">Customers are ranked by churn probability. Explanations are based on model-tested what-if changes rather than only fixed text rules.</p>
+
+      <p class="section-text">
+        This table shows which customers are most likely to churn, why the model
+        sees them as risky, and what retention action may reduce their risk.
+      </p>
 
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
               <th>#</th>
+              <th>Customer</th>
               <th>Risk</th>
               <th>Probability</th>
               <th>Model-Based Explanation</th>
@@ -131,38 +169,69 @@
 
           <tbody id="customerTable">
             <tr>
-              <td colspan="5">Upload customer data to reveal churn intelligence.</td>
+              <td colspan="6">
+                Upload customer data to reveal churn intelligence.
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
+    <!-- What-if simulator -->
     <section class="glass-card simulator-card simulator-section">
       <span class="section-tag">UNIQUE CONTRIBUTION</span>
-      <h3>What-If Retention Simulator</h3>
-      <p class="section-text">Simulate a retention intervention and estimate how much churn risk may drop, how much revenue may be protected, and whether the action is financially worth it.</p>
+
+      <h3>AI What-If Retention Simulator</h3>
+
+      <p class="section-text">
+        The what-if simulator reuses the trained churn model. It changes one
+        customer attribute, predicts again, and shows how much the churn risk may
+        decrease after the recommended retention action.
+      </p>
 
       <div class="sim-grid">
         <div>
-          <label>Intervention Cost</label>
-          <input type="number" id="interventionCost" value="100" />
+          <h4>How it works</h4>
 
-          <label>Annual Customer Value</label>
-          <input type="number" id="customerValue" value="1000" />
+          <p class="section-text">
+            1. Selects the highest-risk customer from the uploaded file.
+          </p>
 
-          <button id="simulateBtn" class="primary-btn full-btn">Run Simulation on Demo Customer</button>
+          <p class="section-text">
+            2. Applies the best recommended retention action.
+          </p>
+
+          <p class="section-text">
+            3. Runs the same trained model again.
+          </p>
+
+          <p class="section-text">
+            4. Compares churn risk before and after the action.
+          </p>
+
+          <button id="simulateBtn" class="primary-btn full-btn">
+            Simulate Best Retention Strategy
+          </button>
         </div>
 
-        <div id="simulationResult" class="simulation-result">Run a simulation to see ROI analysis.</div>
+        <div id="simulationResult" class="simulation-result">
+          Upload customer data, then run a simulation to see how a retention
+          action may reduce churn risk.
+        </div>
       </div>
     </section>
 
+    <!-- Monitoring -->
     <section class="bottom-grid mlops-section">
       <div class="glass-card">
         <span class="section-tag">MLOPS MONITORING</span>
+
         <h3>Live API Metrics</h3>
-        <p class="section-text">Operational counters from the deployed prediction service.</p>
+
+        <p class="section-text">
+          Operational counters from the deployed prediction service.
+        </p>
 
         <div class="metrics">
           <div class="metric-row">
@@ -184,12 +253,13 @@
 
       <div class="glass-card">
         <span class="section-tag">PRODUCT VALUE</span>
+
         <h3>Why Companies Use RetainIQ</h3>
 
         <ul class="feature-list">
           <li>Identify customers likely to leave before revenue is lost.</li>
           <li>Explain model behavior through what-if analysis.</li>
-          <li>Estimate revenue exposure and intervention ROI.</li>
+          <li>Recommend retention actions for high-risk customers.</li>
           <li>Serve predictions through production APIs.</li>
           <li>Track model lifecycle with MLflow and Dockerized deployment.</li>
         </ul>

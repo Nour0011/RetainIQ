@@ -21,30 +21,20 @@ from datetime import datetime
 from typing import Dict, Any
 
 import joblib
+import mlflow
 import mlflow.pyfunc
 import pandas as pd
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import mlflow
 
 mlflow.set_tracking_uri("file:///app/mlruns")
-
-
-# ============================================================
-# FastAPI application
-# ============================================================
 
 app = FastAPI(
     title="RetainIQ Pro API",
     version="4.0",
     description="AI-powered customer retention intelligence platform",
 )
-
-
-# ============================================================
-# CORS configuration
-# ============================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -53,11 +43,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-# ============================================================
-# Paths and production model loading
-# ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = BASE_DIR / "models" / "best_tuned_churn_model.pkl"
@@ -70,15 +55,9 @@ try:
         model_uri=f"models:/{MODEL_NAME}/{MODEL_STAGE}"
     )
     MODEL_SOURCE = "MLflow Model Registry"
-
 except Exception:
     model = joblib.load(MODEL_PATH)
     MODEL_SOURCE = "Local PKL Fallback"
-
-
-# ============================================================
-# Monitoring counters
-# ============================================================
 
 monitoring_metrics = {
     "total_predictions": 0,
@@ -90,10 +69,6 @@ monitoring_metrics = {
     "last_prediction_time": None,
 }
 
-
-# ============================================================
-# Input schema
-# ============================================================
 
 class CustomerData(BaseModel):
     """Input schema for one customer."""
@@ -120,48 +95,37 @@ class CustomerData(BaseModel):
 
 
 class SimulationRequest(BaseModel):
-    """Request schema for what-if simulation."""
+    """Request schema for what-if retention simulation."""
 
     customer: CustomerData
     intervention_cost: float = 100.0
     annual_customer_value: float = 1000.0
 
 
-# ============================================================
-# Utility functions
-# ============================================================
-
 def predict_probability(input_df: pd.DataFrame) -> float:
     """Return churn probability for a single-row DataFrame."""
-
     probability = model.predict_proba(input_df)[0][1]
     return float(probability)
 
 
 def get_risk_level(probability: float) -> str:
     """Convert probability into business risk category."""
-
     if probability >= 0.80:
         return "High"
-
     if probability >= 0.50:
         return "Medium"
-
     return "Low"
 
 
 def update_metrics(risk_level: str) -> None:
     """Update API monitoring counters."""
-
     monitoring_metrics["total_predictions"] += 1
     monitoring_metrics["last_prediction_time"] = datetime.now().isoformat()
 
     if risk_level == "High":
         monitoring_metrics["high_risk_predictions"] += 1
-
     elif risk_level == "Medium":
         monitoring_metrics["medium_risk_predictions"] += 1
-
     else:
         monitoring_metrics["low_risk_predictions"] += 1
 
@@ -172,38 +136,22 @@ def roi_calculator(
     annual_customer_value: float,
     intervention_cost: float,
 ) -> Dict[str, Any]:
-    """Calculate estimated business ROI."""
+    """Calculate estimated business ROI for a retention intervention."""
+    risk_reduction = max(original_probability - new_probability, 0)
+    expected_revenue_protected = risk_reduction * annual_customer_value
+    net_value = expected_revenue_protected - intervention_cost
 
-    risk_reduction = max(
-        original_probability - new_probability,
-        0,
-    )
-
-    expected_revenue_protected = (
-        risk_reduction * annual_customer_value
-    )
-
-    net_value = (
-        expected_revenue_protected - intervention_cost
-    )
-
-    if intervention_cost > 0:
-        roi = net_value / intervention_cost
-    else:
-        roi = 0
+    roi = net_value / intervention_cost if intervention_cost > 0 else 0
 
     decision = (
-        "Worth Retaining"
+        "Retention intervention is financially beneficial."
         if net_value > 0
-        else "Not Cost Effective"
+        else "Retention intervention may not be financially justified."
     )
 
     return {
         "risk_reduction": round(risk_reduction, 4),
-        "expected_revenue_protected": round(
-            expected_revenue_protected,
-            2,
-        ),
+        "expected_revenue_protected": round(expected_revenue_protected, 2),
         "intervention_cost": round(intervention_cost, 2),
         "net_value": round(net_value, 2),
         "roi": round(roi, 2),
@@ -211,15 +159,8 @@ def roi_calculator(
     }
 
 
-# ============================================================
-# Model-based explanation engine
-# ============================================================
-
-def generate_counterfactual_candidates(
-    row: pd.Series,
-) -> Dict[str, Any]:
+def generate_counterfactual_candidates(row: pd.Series) -> Dict[str, Any]:
     """Generate safer alternative values for what-if testing."""
-
     candidates = {}
 
     if row.get("Contract") == "Month-to-month":
@@ -237,32 +178,23 @@ def generate_counterfactual_candidates(
     monthly_charge = float(row.get("MonthlyCharges", 0))
 
     if monthly_charge > 0:
-        candidates["MonthlyCharges"] = round(
-            monthly_charge * 0.80,
-            2,
-        )
+        candidates["MonthlyCharges"] = round(monthly_charge * 0.80, 2)
 
     return candidates
 
 
-def model_based_explanation(
-    input_df: pd.DataFrame,
-) -> list[Dict[str, Any]]:
+def model_based_explanation(input_df: pd.DataFrame) -> list[Dict[str, Any]]:
     """Explain churn risk using model-based what-if tests."""
-
     input_df = input_df.reset_index(drop=True)
-
     row = input_df.iloc[0]
 
     original_probability = predict_probability(input_df)
-
     candidates = generate_counterfactual_candidates(row)
 
     explanations = []
 
     for feature, new_value in candidates.items():
         modified_df = input_df.copy()
-
         old_value = modified_df.iloc[0][feature]
 
         modified_df.iloc[
@@ -271,7 +203,6 @@ def model_based_explanation(
         ] = new_value
 
         new_probability = predict_probability(modified_df)
-
         risk_drop = original_probability - new_probability
 
         if risk_drop > 0.01:
@@ -284,18 +215,14 @@ def model_based_explanation(
                     "risk_after": round(new_probability, 4),
                     "risk_drop": round(risk_drop, 4),
                     "explanation": (
-                        f"Changing {feature} from "
-                        f"'{old_value}' to '{new_value}' "
-                        f"reduces predicted churn risk by "
+                        f"Changing {feature} from '{old_value}' to "
+                        f"'{new_value}' reduces predicted churn risk by "
                         f"{round(risk_drop * 100, 2)}%."
                     ),
                 }
             )
 
-    explanations.sort(
-        key=lambda item: item["risk_drop"],
-        reverse=True,
-    )
+    explanations.sort(key=lambda item: item["risk_drop"], reverse=True)
 
     if not explanations:
         return [
@@ -307,8 +234,8 @@ def model_based_explanation(
                 "risk_after": round(original_probability, 4),
                 "risk_drop": 0,
                 "explanation": (
-                    "The model did not find a single tested "
-                    "intervention that significantly reduces churn risk."
+                    "The model did not find a single tested intervention "
+                    "that significantly reduces churn risk."
                 ),
             }
         ]
@@ -320,8 +247,7 @@ def recommend_action(
     explanations: list[Dict[str, Any]],
     risk_level: str,
 ) -> str:
-    """Generate recommendation from strongest explanation."""
-
+    """Generate retention recommendation from strongest explanation."""
     if risk_level == "Low":
         return "Customer appears stable. Continue regular engagement."
 
@@ -347,44 +273,29 @@ def recommend_action(
 
 def predict_dataframe(input_df: pd.DataFrame) -> pd.DataFrame:
     """Run batch predictions and add product-level insights."""
-
     probabilities = model.predict_proba(input_df)[:, 1]
 
     results = input_df.copy()
-
     results["churn_probability"] = probabilities
 
-    results["prediction"] = results[
-        "churn_probability"
-    ].apply(
+    results["prediction"] = results["churn_probability"].apply(
         lambda p: "Churn" if p >= 0.50 else "No Churn"
     )
 
-    results["risk_level"] = results[
-        "churn_probability"
-    ].apply(get_risk_level)
+    results["risk_level"] = results["churn_probability"].apply(get_risk_level)
 
     explanations = []
     recommendations = []
 
     for _, row in results.iterrows():
         single_df = pd.DataFrame([row[input_df.columns]])
-
         explanation_items = model_based_explanation(single_df)
 
-        risk_level = get_risk_level(
-            float(row["churn_probability"])
-        )
+        risk_level = get_risk_level(float(row["churn_probability"]))
 
-        explanations.append(
-            explanation_items[0]["explanation"]
-        )
-
+        explanations.append(explanation_items[0]["explanation"])
         recommendations.append(
-            recommend_action(
-                explanation_items,
-                risk_level,
-            )
+            recommend_action(explanation_items, risk_level)
         )
 
     results["explanation"] = explanations
@@ -393,14 +304,9 @@ def predict_dataframe(input_df: pd.DataFrame) -> pd.DataFrame:
     return results
 
 
-# ============================================================
-# API endpoints
-# ============================================================
-
 @app.get("/")
 def home():
     """Root endpoint."""
-
     return {
         "message": "RetainIQ Pro API is running",
         "version": "4.0",
@@ -412,7 +318,6 @@ def home():
 @app.get("/health")
 def health():
     """Health check endpoint."""
-
     return {
         "status": "healthy",
         "model_loaded": model is not None,
@@ -424,16 +329,13 @@ def health():
 @app.get("/model_info")
 def model_info():
     """Return model/product information."""
-
     return {
         "model_name": MODEL_NAME,
         "stage": MODEL_STAGE,
         "version": "4.0",
         "model_source": MODEL_SOURCE,
         "model_file": str(MODEL_PATH.name),
-        "explanation_method": (
-            "Model-based counterfactual what-if analysis"
-        ),
+        "explanation_method": "Model-based counterfactual what-if analysis",
         "mlops": [
             "MLflow experiment tracking",
             "MLflow model registry",
@@ -447,35 +349,23 @@ def model_info():
 @app.get("/metrics")
 def metrics():
     """Return API monitoring counters."""
-
     return monitoring_metrics
 
 
 @app.post("/predict")
 def predict(customer: CustomerData):
     """Predict churn for one customer with explanation."""
-
     input_df = pd.DataFrame([customer.dict()])
 
     probability = predict_probability(input_df)
-
     risk_level = get_risk_level(probability)
-
     explanations = model_based_explanation(input_df)
-
-    recommendation = recommend_action(
-        explanations,
-        risk_level,
-    )
+    recommendation = recommend_action(explanations, risk_level)
 
     update_metrics(risk_level)
 
     return {
-        "prediction": (
-            "Churn"
-            if probability >= 0.50
-            else "No Churn"
-        ),
+        "prediction": "Churn" if probability >= 0.50 else "No Churn",
         "churn_probability": round(probability, 4),
         "risk_level": risk_level,
         "top_model_based_explanations": explanations,
@@ -486,54 +376,53 @@ def predict(customer: CustomerData):
 @app.post("/batch_predict")
 async def batch_predict(file: UploadFile = File(...)):
     """Analyze many customers from uploaded CSV."""
-
     if not file.filename.endswith(".csv"):
-        return {
-            "error": "Only CSV files are supported."
-        }
+        return {"error": "Only CSV files are supported."}
 
     content = await file.read()
 
-    input_df = pd.read_csv(
-        StringIO(content.decode("utf-8"))
-    )
+    input_df = pd.read_csv(StringIO(content.decode("utf-8")))
 
     result_df = predict_dataframe(input_df)
 
     for risk_level in result_df["risk_level"]:
         update_metrics(risk_level)
 
-    monitoring_metrics["last_batch_size"] = int(
-        len(result_df)
-    )
+    monitoring_metrics["last_batch_size"] = int(len(result_df))
 
-    high_risk = int(
-        (result_df["risk_level"] == "High").sum()
-    )
+    high_risk = int((result_df["risk_level"] == "High").sum())
+    medium_risk = int((result_df["risk_level"] == "Medium").sum())
+    low_risk = int((result_df["risk_level"] == "Low").sum())
 
-    medium_risk = int(
-        (result_df["risk_level"] == "Medium").sum()
-    )
+    avg_monthly_charge = float(result_df["MonthlyCharges"].mean())
 
-    low_risk = int(
-        (result_df["risk_level"] == "Low").sum()
-    )
+    estimated_revenue_at_risk = high_risk * avg_monthly_charge * 12
 
-    avg_monthly_charge = float(
-        result_df["MonthlyCharges"].mean()
-    )
-
-    estimated_revenue_at_risk = (
-        high_risk * avg_monthly_charge * 12
-    )
-
-    top_risky = (
+    # Prepare top risky customers for frontend dashboard.
+    top_risky_df = (
         result_df.sort_values(
             by="churn_probability",
             ascending=False,
         )
-        .head(10)[
+        .head(10)
+        .copy()
+    )
+
+    # Use real customerID if the uploaded CSV contains it.
+    # Otherwise, generate simple readable customer labels.
+    if "customerID" in top_risky_df.columns:
+        top_risky_df["customer_id"] = top_risky_df["customerID"]
+    else:
+        top_risky_df["customer_id"] = [
+            f"Customer {i + 1}"
+            for i in range(len(top_risky_df))
+        ]
+
+    # Return only the fields needed by the dashboard.
+    top_risky = (
+        top_risky_df[
             [
+                "customer_id",
                 "churn_probability",
                 "prediction",
                 "risk_level",
@@ -551,10 +440,7 @@ async def batch_predict(file: UploadFile = File(...)):
         "high_risk_customers": high_risk,
         "medium_risk_customers": medium_risk,
         "low_risk_customers": low_risk,
-        "estimated_revenue_at_risk": round(
-            estimated_revenue_at_risk,
-            2,
-        ),
+        "estimated_revenue_at_risk": round(estimated_revenue_at_risk, 2),
         "top_risky_customers": top_risky,
     }
 
@@ -562,26 +448,16 @@ async def batch_predict(file: UploadFile = File(...)):
 @app.post("/simulate")
 def simulate(request: SimulationRequest):
     """Run what-if retention simulation."""
-
     input_df = pd.DataFrame([request.customer.dict()])
 
     original_probability = predict_probability(input_df)
-
     explanations = model_based_explanation(input_df)
-
     best_intervention = explanations[0]
 
-    simulated_probability = float(
-        best_intervention["risk_after"]
-    )
+    simulated_probability = float(best_intervention["risk_after"])
 
-    risk_level_before = get_risk_level(
-        original_probability
-    )
-
-    risk_level_after = get_risk_level(
-        simulated_probability
-    )
+    risk_level_before = get_risk_level(original_probability)
+    risk_level_after = get_risk_level(simulated_probability)
 
     roi = roi_calculator(
         original_probability=original_probability,
@@ -593,16 +469,10 @@ def simulate(request: SimulationRequest):
     monitoring_metrics["simulations_run"] += 1
 
     return {
-        "current_churn_probability": round(
-            original_probability,
-            4,
-        ),
+        "current_churn_probability": round(original_probability, 4),
         "current_risk_level": risk_level_before,
         "best_intervention": best_intervention,
-        "simulated_churn_probability": round(
-            simulated_probability,
-            4,
-        ),
+        "simulated_churn_probability": round(simulated_probability, 4),
         "simulated_risk_level": risk_level_after,
         "roi_analysis": roi,
         "business_summary": (
@@ -613,6 +483,6 @@ def simulate(request: SimulationRequest):
             f"This reduces churn risk from "
             f"{round(original_probability * 100, 2)}% to "
             f"{round(simulated_probability * 100, 2)}%. "
-            f"Decision: {roi['decision']}."
+            f"Decision: {roi['decision']}"
         ),
     }
