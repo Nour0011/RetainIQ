@@ -510,29 +510,29 @@ RetainIQ/
 
 ## Dashboard
 
-![Dashboard](docs/screenshots/dashboard_overview.png)
+![Dashboard](docs/screenshots/dashboard_overview)
 
-![Risk Analysis](docs/screenshots/risk_analysis_dashboard.png)
+![Risk Analysis](docs/screenshots/risk_analysis_dashboard)
 
 ---
 
 ## MLflow Tracking
 
-![MLflow Home](docs/screenshots/mlflow_home.png)
+![MLflow Home](docs/screenshots/mlflow_home)
 
-![MLflow Registry](docs/screenshots/mlflow_model_registry.png)
+![MLflow Registry](docs/screenshots/mlflow_model_registry)
 
 ---
 
 ## API Documentation
 
-![API Docs](docs/screenshots/api_documentation.png)
+![API Docs](docs/screenshots/api_documentation)
 
 ---
 
 ## Docker Containers
 
-![Docker](docs/screenshots/docker_containers_running.png)
+![Docker](docs/screenshots/docker_containers_running)
 
 ---
 
