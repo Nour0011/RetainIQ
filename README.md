@@ -516,26 +516,6 @@ RetainIQ/
 
 ---
 
-## MLflow Tracking
-
-![MLflow Home](screenshots/mlflow_home.png)
-
-![MLflow Registry](screenshots/mlflow_model_registry.png)
-
----
-
-## API Documentation
-
-![API Docs](screenshots/api_documentation.png)
-
----
-
-## Docker Containers
-
-![Docker](screenshots/docker_containers_running.png)
-
----
-
 # Results
 
 ## Final Model Performance
