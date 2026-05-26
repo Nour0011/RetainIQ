@@ -462,17 +462,8 @@ RetainIQ/
 │
 ├── data/
 │   ├── raw/
-│   │   └── telco_churn.csv
-│   │
 │   ├── processed/
-│   │   └── telco_churn_clean.csv
-│   │
 │   └── production_simulation/
-│       ├── production_customers.csv
-│       ├── production_window_1.csv
-│       ├── production_window_2.csv
-│       ├── production_window_3.csv
-│       └── simulated_production_data.csv
 │
 ├── models/
 │   ├── best_tuned_churn_model.pkl
@@ -488,18 +479,22 @@ RetainIQ/
 │   ├── recommendations.py
 │   └── drift_monitoring.py
 │
+├── frontend/
 ├── reports/
-│
-├── docs/
-│   └── screenshots/
-│
-├── mlruns/
+├── screenshots/
 ├── notebooks/
+├── logs/
+├── mlruns/
+├── mlartifacts/
+├── .github/
 │
-├── sample_customers.csv
 ├── docker-compose.yml
+├── Dockerfile
 ├── requirements.txt
 ├── README.md
+├── reflection.md
+├── sample_customers.xlsx
+├── mlflow.db
 ├── .gitignore
 └── .dockerignore
 ```
