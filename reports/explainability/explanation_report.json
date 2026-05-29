@@ -4,44 +4,44 @@
     "purpose": "Explain churn prediction drivers",
     "top_10_features": [
         {
-            "feature": "Contract_Month-to-month",
-            "mean_abs_shap": 0.07997
-        },
-        {
             "feature": "tenure",
-            "mean_abs_shap": 0.05508
+            "mean_abs_shap": 0.54377
         },
         {
-            "feature": "InternetService_Fiber optic",
-            "mean_abs_shap": 0.04
-        },
-        {
-            "feature": "Contract_Two year",
-            "mean_abs_shap": 0.03981
-        },
-        {
-            "feature": "TotalCharges",
-            "mean_abs_shap": 0.03746
-        },
-        {
-            "feature": "OnlineSecurity_No",
-            "mean_abs_shap": 0.03457
-        },
-        {
-            "feature": "TechSupport_No",
-            "mean_abs_shap": 0.02731
-        },
-        {
-            "feature": "PaymentMethod_Electronic check",
-            "mean_abs_shap": 0.02659
+            "feature": "Contract_Month-to-month",
+            "mean_abs_shap": 0.50724
         },
         {
             "feature": "MonthlyCharges",
-            "mean_abs_shap": 0.02257
+            "mean_abs_shap": 0.24211
         },
         {
-            "feature": "InternetService_DSL",
-            "mean_abs_shap": 0.01685
+            "feature": "InternetService_Fiber optic",
+            "mean_abs_shap": 0.23066
+        },
+        {
+            "feature": "OnlineSecurity_No",
+            "mean_abs_shap": 0.22288
+        },
+        {
+            "feature": "Contract_Two year",
+            "mean_abs_shap": 0.17901
+        },
+        {
+            "feature": "TechSupport_No",
+            "mean_abs_shap": 0.17443
+        },
+        {
+            "feature": "PaymentMethod_Electronic check",
+            "mean_abs_shap": 0.15595
+        },
+        {
+            "feature": "MultipleLines_No",
+            "mean_abs_shap": 0.11022
+        },
+        {
+            "feature": "TotalCharges",
+            "mean_abs_shap": 0.10033
         }
     ]
 }

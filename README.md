@@ -129,7 +129,7 @@ Frontend Dashboard
 FastAPI Backend Service
             ↓
 ML Prediction Engine
-(Random Forest Model)
+(Tuned Gradient Boosting Model)
             ↓
 Predictions + Simulations
             ↓
@@ -227,7 +227,7 @@ Several machine learning models were evaluated.
 ### Final Selected Model
 
 ```text
-Random Forest Classifier
+Tuned Gradient Boosting Classifier
 ```
 
 ### Reason for Selection
@@ -251,10 +251,11 @@ Although Hyperopt was originally considered, Optuna was selected because it is m
 
 ```text
 n_estimators
+learning_rate
 max_depth
 min_samples_split
 min_samples_leaf
-class_weight
+subsample
 ```
 
 All tuning experiments were tracked inside MLflow.
@@ -357,7 +358,7 @@ This allows businesses to understand actionable retention strategies rather than
 
 The platform includes a business simulation engine that estimates how recommended retention actions may reduce customer churn risk.
 
-The simulator reuses the trained Random Forest model by modifying selected customer attributes and recalculating churn probability.
+The simulator reuses the trained Gradient Boosting model by modifying selected customer attributes and recalculating churn probability.
 
 ## Example Simulation
 
@@ -466,7 +467,7 @@ RetainIQ/
 │   └── production_simulation/
 │
 ├── models/
-│   ├── best_tuned_churn_model.pkl
+│   ├── best_tuned_gradient_boosting_model.pkl
 │   └── preprocessor.pkl
 │
 ├── src/
@@ -479,7 +480,6 @@ RetainIQ/
 │   ├── recommendations.py
 │   └── drift_monitoring.py
 │
-├── frontend/
 ├── reports/
 ├── screenshots/
 ├── notebooks/
@@ -517,15 +517,15 @@ RetainIQ/
 
 | Metric | Score |
 |---|---|
-| Accuracy | 0.84 |
-| Precision | 0.79 |
-| Recall | 0.76 |
-| F1-Score | 0.77 |
-| ROC-AUC | 0.88 |
+| Accuracy | 0.79 |
+| Precision | 0.63 |
+| Recall | 0.51 |
+| F1-Score | 0.57 |
+| ROC-AUC | 0.84 |
 
-The tuned Random Forest model achieved strong predictive performance and balanced recall/precision tradeoffs suitable for churn-risk detection.
+The tuned Gradient Boosting model achieved the strongest overall performance among the evaluated models and was selected as the production candidate.
 
-The final Random Forest model successfully demonstrated:
+The final Gradient Boosting model successfully demonstrated:
 
 - End-to-end ML lifecycle management
 - Model deployment
@@ -580,7 +580,7 @@ The What-If Simulator:
 
 1. Selects the highest-risk customer
 2. Applies the AI-recommended retention action
-3. Runs the trained Random Forest model again
+3. Runs the trained Gradient Boosting model again
 4. Compares churn risk before and after intervention
 
 This demonstrates how retention actions may reduce customer churn probability.
@@ -612,7 +612,7 @@ Potential future enhancements include:
 - Real-time streaming predictions
 - Cloud deployment
 - Automated retraining pipelines
-- SHAP-based explainability
+- Advanced SHAP visual analytics
 - Advanced drift detection
 - LLM-generated customer insights
 - Kubernetes deployment

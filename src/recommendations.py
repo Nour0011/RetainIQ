@@ -49,7 +49,7 @@ DATA_PATH = os.path.join(
 MODEL_PATH = os.path.join(
     BASE_DIR,
     "models",
-    "best_tuned_churn_model.pkl"
+    "best_tuned_gradient_boosting_model.pkl"
 )
 
 PREPROCESSOR_PATH = os.path.join(

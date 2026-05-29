@@ -14,12 +14,12 @@
         ]
     },
     "performance_metrics": {
-        "accuracy": 0.7802,
-        "recall": 0.8364,
-        "f1_score": 0.6671,
-        "roc_auc": 0.8737,
-        "average_churn_probability": 0.4386,
-        "predicted_churn_rate": 0.397
+        "accuracy": 0.7448,
+        "recall": 0.784,
+        "f1_score": 0.618,
+        "roc_auc": 0.8278,
+        "average_churn_probability": 0.4018,
+        "predicted_churn_rate": 0.4047
     },
     "feature_drift": {
         "SeniorCitizen": {

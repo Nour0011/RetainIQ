@@ -54,7 +54,7 @@ warnings.filterwarnings("ignore")
 BASE_DIR = Path(__file__).resolve().parents[1]
 
 DATA_PATH = BASE_DIR / "data" / "processed" / "telco_churn_clean.csv"
-MODEL_PATH = BASE_DIR / "models" / "best_tuned_churn_model.pkl"
+MODEL_PATH = BASE_DIR / "models" / "best_tuned_gradient_boosting_model.pkl"
 
 REPORT_DIR = BASE_DIR / "reports" / "evaluation"
 FIGURE_DIR = REPORT_DIR / "figures"

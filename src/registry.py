@@ -1,92 +1,59 @@
 """
+Register the final tuned Gradient Boosting model in MLflow Model Registry.
 
-Purpose:
-    This script registers the best tuned churn prediction model into
-    the MLflow Model Registry and demonstrates lifecycle transitions.
-
-Requirements covered:
-    1. MLflow Model Registry
-    2. Model version management
-    3. Stage transitions
-    4. Staging -> Production workflow
-    5. Enterprise lifecycle management
-
+This script searches all MLflow experiments for the run named
+"Best Tuned Gradient Boosting", registers its model artifact, moves it to
+Staging, then Production, and archives older versions.
 """
 
-from pathlib import Path
 import time
-
 import mlflow
 from mlflow import MlflowClient
 
 
-# Project paths
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-
-# Path to the tuned model saved from tune.py
-MODEL_PATH = BASE_DIR / "models" / "best_tuned_churn_model.pkl"
-
-# MLflow experiment name
-EXPERIMENT_NAME = "RetainIQ-Pro-Hyperparameter-Tuning"
-
-# Registered model name inside MLflow Registry
+MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
+FINAL_RUN_NAME = "Best Tuned Gradient Boosting"
 REGISTERED_MODEL_NAME = "RetainIQ-Churn-Predictor"
 
 
-def get_latest_run_id(client, experiment_name):
+def find_best_tuned_gradient_boosting_run(client):
     """
-    Retrieve the latest MLflow run ID from the tuning experiment.
-
-    This allows us to register the most recent tuned model automatically.
-
-    Args:
-        client:
-            MLflow client object.
-
-        experiment_name:
-            Name of MLflow experiment.
-
-    Returns:
-        Latest MLflow run ID.
+    Search all MLflow experiments for the final tuned Gradient Boosting run.
     """
-    experiment = client.get_experiment_by_name(experiment_name)
+    experiments = client.search_experiments()
 
-    if experiment is None:
-        raise ValueError(
-            f"Experiment '{experiment_name}' does not exist."
+    for experiment in experiments:
+        runs = client.search_runs(
+            experiment_ids=[experiment.experiment_id],
+            filter_string=f"tags.mlflow.runName = '{FINAL_RUN_NAME}'",
+            order_by=["start_time DESC"],
+            max_results=1,
         )
 
-    runs = client.search_runs(
-        experiment_ids=[experiment.experiment_id],
-        order_by=["start_time DESC"],
-        max_results=1,
+        if runs:
+            run = runs[0]
+            print("\nFound final tuned Gradient Boosting run.")
+            print(f"Experiment: {experiment.name}")
+            print(f"Run ID: {run.info.run_id}")
+            return run.info.run_id
+
+    print("\nAvailable experiments:")
+    for experiment in experiments:
+        print(f"- {experiment.name}")
+
+    raise ValueError(
+        f"No run named '{FINAL_RUN_NAME}' was found in any MLflow experiment."
     )
 
-    if not runs:
-        raise ValueError("No runs found in experiment.")
 
-    latest_run = runs[0]
-
-    print("\nLatest MLflow Run Found:")
-    print(f"Run ID: {latest_run.info.run_id}")
-
-    return latest_run.info.run_id
-
-
-def register_model(client, run_id):
+def register_model(run_id):
     """
-    Register the tuned model into MLflow Model Registry.
-
-    The model artifact path inside MLflow is:
-        model
-
-    Returns:
-        Registered model version object.
+    Register the model artifact from the selected MLflow run.
     """
     model_uri = f"runs:/{run_id}/model"
 
-    print("\nRegistering model to MLflow Registry...")
+    print("\nRegistering model...")
+    print(f"Model URI: {model_uri}")
 
     registered_model = mlflow.register_model(
         model_uri=model_uri,
@@ -94,23 +61,18 @@ def register_model(client, run_id):
     )
 
     print(
-        f"Model registered successfully. "
-        f"Version: {registered_model.version}"
+        f"\nRegistered successfully: "
+        f"{REGISTERED_MODEL_NAME} version {registered_model.version}"
     )
 
-    return registered_model
+    return registered_model.version
 
 
-def transition_model_stage(client, version):
+def move_to_production(client, version):
     """
-    Transition model through lifecycle stages.
-
-    Lifecycle:
-        None -> Staging -> Production
-
-    This simulates a real enterprise deployment workflow.
+    Move the new model version to Staging, then Production.
     """
-    print("\nTransitioning model to STAGING...")
+    print("\nMoving model to Staging...")
 
     client.transition_model_version_stage(
         name=REGISTERED_MODEL_NAME,
@@ -118,11 +80,9 @@ def transition_model_stage(client, version):
         stage="Staging",
     )
 
-    print("Model moved to Staging.")
-
     time.sleep(2)
 
-    print("\nTransitioning model to PRODUCTION...")
+    print("Moving model to Production...")
 
     client.transition_model_version_stage(
         name=REGISTERED_MODEL_NAME,
@@ -130,90 +90,46 @@ def transition_model_stage(client, version):
         stage="Production",
     )
 
-    print("Model moved to Production.")
+    print("Model is now in Production.")
 
 
 def archive_old_versions(client, current_version):
     """
-    Archive older model versions.
-
-    This keeps the registry clean and simulates proper enterprise
-    lifecycle management.
+    Archive all older versions of the registered model.
     """
-    print("\nChecking for old model versions...")
-
     versions = client.search_model_versions(
         f"name='{REGISTERED_MODEL_NAME}'"
     )
 
-    for version in versions:
-        version_number = int(version.version)
-
-        if version_number != int(current_version):
+    for model_version in versions:
+        if int(model_version.version) != int(current_version):
             client.transition_model_version_stage(
                 name=REGISTERED_MODEL_NAME,
-                version=version.version,
+                version=model_version.version,
                 stage="Archived",
             )
-
-            print(
-                f"Archived old model version: {version.version}"
-            )
+            print(f"Archived old version: {model_version.version}")
 
 
 def main():
     """
-    Execute the full MLflow registry workflow.
-
-    Workflow:
-        1. Connect to MLflow
-        2. Retrieve latest tuned model
-        3. Register model
-        4. Move model to Staging
-        5. Move model to Production
-        6. Archive old versions
+    Execute the full registry workflow.
     """
-    print("\nRetainIQ Pro - Model Registry Management\n")
+    print("\nRetainIQ - Gradient Boosting Registry Workflow")
 
-    # Connect to MLflow tracking server.
-    mlflow.set_tracking_uri("http://127.0.0.1:5000")
-
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     client = MlflowClient()
 
-    # Get latest tuning run.
-    run_id = get_latest_run_id(
-        client,
-        EXPERIMENT_NAME,
-    )
+    run_id = find_best_tuned_gradient_boosting_run(client)
+    version = register_model(run_id)
 
-    # Register model.
-    registered_model = register_model(
-        client,
-        run_id,
-    )
+    move_to_production(client, version)
+    archive_old_versions(client, version)
 
-    # Move through lifecycle stages.
-    transition_model_stage(
-        client,
-        registered_model.version,
-    )
-
-    # Archive old versions.
-    archive_old_versions(
-        client,
-        registered_model.version,
-    )
-
-    print("\nRegistry workflow completed successfully.")
-
-    print("\nOpen MLflow UI:")
-    print("http://127.0.0.1:5000")
-
-    print("\nCheck:")
-    print("- Models tab")
-    print("- Model versions")
-    print("- Production stage")
-    print("- Archived versions")
+    print("\nRegistry completed successfully.")
+    print("Open: http://127.0.0.1:5000/#/models")
+    print("Check that the latest Production version comes from:")
+    print(FINAL_RUN_NAME)
 
 
 if __name__ == "__main__":

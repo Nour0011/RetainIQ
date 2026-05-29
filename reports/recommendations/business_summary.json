@@ -1,7 +1,7 @@
 {
-    "generated_at": "2026-05-17 00:18:08.525944",
+    "generated_at": "2026-05-29 15:41:24.862974",
     "total_customers": 7032,
-    "critical_risk_customers": 772,
-    "high_risk_customers": 1123,
-    "estimated_revenue_at_risk": 1727890.2
+    "critical_risk_customers": 300,
+    "high_risk_customers": 719,
+    "estimated_revenue_at_risk": 971576.4
 }

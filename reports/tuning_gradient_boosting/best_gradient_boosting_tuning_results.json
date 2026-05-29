@@ -1,0 +1,19 @@
+{
+    "best_params": {
+        "n_estimators": 133,
+        "learning_rate": 0.10898733431572917,
+        "max_depth": 2,
+        "min_samples_split": 6,
+        "min_samples_leaf": 6,
+        "subsample": 0.6690836938208613,
+        "random_state": 42
+    },
+    "best_metrics": {
+        "accuracy": 0.7938877043354655,
+        "precision": 0.6381578947368421,
+        "recall": 0.5187165775401069,
+        "f1_score": 0.5722713864306784,
+        "roc_auc": 0.8420402130754616
+    },
+    "best_model_path": "C:\\Users\\ASUS\\Downloads\\RetainIQ\\models\\best_tuned_gradient_boosting_model.pkl"
+}
