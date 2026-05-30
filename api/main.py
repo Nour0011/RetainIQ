@@ -45,7 +45,7 @@ app.add_middleware(
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / "models" / "best_tuned_churn_model.pkl"
+MODEL_PATH = BASE_DIR / "models" / "best_tuned_gradient_boosting_model.pkl"
 
 MODEL_NAME = "RetainIQ-Churn-Predictor"
 MODEL_STAGE = "Production"
