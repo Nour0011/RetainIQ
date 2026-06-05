@@ -7,7 +7,7 @@ services:
     ports:
       - "8010:8010"
     volumes:
-     - .:/app
+      - .:/app
 
   retainiq-frontend:
     build:
@@ -27,5 +27,7 @@ services:
       - .:/app
     ports:
       - "5000:5000"
+    environment:
+      - MLFLOW_ALLOW_FILE_STORE=true
     command: >
-      sh -c "pip install mlflow && mlflow ui --host 0.0.0.0 --port 5000"
+      sh -c "pip install mlflow==2.13.0 && mlflow ui --host 0.0.0.0 --port 5000"
