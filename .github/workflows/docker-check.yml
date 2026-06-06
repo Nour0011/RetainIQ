@@ -1,4 +1,4 @@
-name: Docker Compose Build Check
+name: RetainIQ CI/CD Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  docker-compose-build:
+  ci-build-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,3 +16,12 @@ jobs:
 
       - name: Build Docker Compose services
         run: docker compose build
+
+      - name: Start services
+        run: docker compose up -d
+
+      - name: Check running containers
+        run: docker ps
+
+      - name: Stop services
+        run: docker compose down
