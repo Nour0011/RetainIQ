@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  ci-build-check:
+  ci-cd:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,3 +25,18 @@ jobs:
 
       - name: Stop services
         run: docker compose down
+
+      - name: Login to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/retainiq:latest
