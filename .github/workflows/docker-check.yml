@@ -125,8 +125,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/retainiq:latest .
+          docker build -t ghcr.io/nour0011/retainiq:latest .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository }}/retainiq:latest
+          docker push ghcr.io/nour0011/retainiq:latest
