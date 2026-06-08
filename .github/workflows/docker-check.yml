@@ -101,3 +101,32 @@ jobs:
 
       - name: Stop Docker Compose services
         run: docker compose down
+
+  docker-publish:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: docker-validation
+    if: github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/retainiq:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository }}/retainiq:latest
